@@ -1,5 +1,5 @@
 ---
-title: "p8105_hw_1_sy3269"
+title: "p8105_hw1_sy3269"
 author: Soomin You
 date: 2024-09-12
 output: github_document
