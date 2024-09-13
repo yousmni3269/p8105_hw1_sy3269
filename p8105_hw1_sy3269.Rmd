@@ -1,7 +1,7 @@
 ---
 title: "p8105_hw1_sy3269"
 author: Soomin You
-date: "2024-09-13"
+date: 2024-09-13
 output: github_document
 ---
 
@@ -10,31 +10,41 @@ output: github_document
 
 This repo is for P8105 Homework 1. 
 
+```{r message = FALSE}
+library(tidyverse)
+```
 
+I loaded necessary packages (e.g. `tidyverse`).
 
 ## Problem 1
 
-```{r}
+```{r data summary}
 data("penguins", package = "palmerpenguins")
 p_variable = names(penguins)
+p_row = nrow(penguins)
+p_col = ncol(penguins)
 ```
 
 There are `r length(p_variable)` variables in penguins dataset. 
 
 Names of the variables are `r p_variable`.
 
-```{r}
-p_row = nrow(penguins)
-p_col = ncol(penguins)
-```
-
-This is the size of the penguin data set. 
-
 There are `r p_row` rows and `r p_col` columns. 
 
-```{r}
+```{r flipper}
 p_flipper = na.omit(penguins$flipper_length_mm)
 mean_p_flipper = mean(p_flipper)
 ```
 
 The mean flipper length of this penguin dataset is `r mean_p_flipper` mm. 
+
+```{r plot}
+ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm)) + 
+  geom_point()
+
+ggsave("penguin scatterplot.pdf")
+    
+```
+This is a scatterplot of the penguins dataset where x = bill_length_mm and y = flipper_length_mm. 
+
+The color will be added later. 
