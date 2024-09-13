@@ -1,29 +1,40 @@
 ---
 title: "p8105_hw1_sy3269"
 author: Soomin You
-date: 2024-09-12
+date: "2024-09-13"
 output: github_document
 ---
 
+
 ## Problem 0.1 and 0.2
+
 This repo is for P8105 Homework 1. 
 
+
+
 ## Problem 1
+
 ```{r}
 data("penguins", package = "palmerpenguins")
+p_variable = names(penguins)
+```
 
+There are `r length(p_variable)` variables in penguins dataset. 
+
+Names of the variables are `r p_variable`.
+
+```{r}
 p_row = nrow(penguins)
 p_col = ncol(penguins)
-
 ```
 
 This is the size of the penguin data set. 
+
 There are `r p_row` rows and `r p_col` columns. 
 
-```{r eval=FALSE}
-
-mean_flip_length = mean()
-
+```{r}
+p_flipper = na.omit(penguins$flipper_length_mm)
+mean_p_flipper = mean(p_flipper)
 ```
 
-The mean flipper length of the penguin data set is 
+The mean flipper length of this penguin dataset is `r mean_p_flipper` mm. 
