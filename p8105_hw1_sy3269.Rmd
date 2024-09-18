@@ -1,10 +1,9 @@
 ---
 title: "p8105_hw1_sy3269"
 author: Soomin You
-date: 2024-09-13
+date: 2024-09-18
 output: github_document
 ---
-
 
 ## Problem 0.1 and 0.2
 
@@ -23,28 +22,29 @@ data("penguins", package = "palmerpenguins")
 p_variable = names(penguins)
 p_row = nrow(penguins)
 p_col = ncol(penguins)
+
+p_species = count(penguins, species)
 ```
 
-There are `r length(p_variable)` variables in penguins dataset. 
+There are `r length(p_variable)` variables in penguins dataset and the names are `r p_variable`.
 
-Names of the variables are `r p_variable`.
+There are `r count(p_species)` species in the dataset and the names are `r pull(p_species,species)`.
 
 There are `r p_row` rows and `r p_col` columns. 
 
+
 ```{r flipper}
-p_flipper = na.omit(penguins$flipper_length_mm)
-mean_p_flipper = mean(p_flipper)
+p_clean = na.omit(penguins)
+mean_p_flipper = mean(p_clean[["flipper_length_mm"]])
 ```
 
-The mean flipper length of this penguin dataset is `r mean_p_flipper` mm. 
+Missing data were removed first to make a clean penguins dataset. Then the mean flipper length of the clean dataset was found to be `r mean_p_flipper` mm. 
 
 ```{r plot}
-ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm)) + 
+ggplot(p_clean, aes(x = bill_length_mm, y = flipper_length_mm, color = (species))) + 
   geom_point()
 
 ggsave("penguin scatterplot.pdf")
-    
 ```
-This is a scatterplot of the penguins dataset where x = bill_length_mm and y = flipper_length_mm. 
 
-The color will be added later. 
+This is a scatterplot of the clean penguins dataset where x = bill_length_mm and y = flipper_length_mm. The different species are noted in different colors. 
