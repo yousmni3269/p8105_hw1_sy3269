@@ -1,7 +1,7 @@
 ---
 title: "p8105_hw1_sy3269"
 author: Soomin You
-date: 2024-09-18
+date: 2024-09-19
 output: github_document
 ---
 
@@ -17,37 +17,44 @@ I loaded necessary packages (e.g. `tidyverse`).
 
 ## Problem 1
 
-```{r data summary}
+```{r, summary}
 data("penguins", package = "palmerpenguins")
-p_variable = names(penguins)
-p_row = nrow(penguins)
-p_col = ncol(penguins)
-
-p_species = count(penguins, species)
+penguin_var = names(penguins) 
 ```
 
-There are `r length(p_variable)` variables in penguins dataset and the names are `r p_variable`.
+There are `r length(penguin_var)` variables in the penguins data set and the names are `r penguin_var`. 
 
-There are `r count(p_species)` species in the dataset and the names are `r pull(p_species,species)`.
+*species*, *island*, *sex* and *year* are categorical variables, or factor vectors.
 
-There are `r p_row` rows and `r p_col` columns. 
+*bill_length_mm*, *bill_depth_mm* *flipper_length_mm* and *body_mass_g* are continuous variables.  The first two are identified as double vectors whereas the latter two are identified as integer vectors. 
+
+The data set has `r nrow(penguins)` rows and `r ncol(penguins)` columns. 
 
 
-```{r flipper}
-p_clean = na.omit(penguins)
-mean_p_flipper = mean(p_clean[["flipper_length_mm"]])
+```{r, flipper}
+mean_flipper = 
+  drop_na(penguins, flipper_length_mm) |>
+  pull(flipper_length_mm) |>
+  mean()
 ```
 
-Missing data were removed first to make a clean penguins dataset. Then the mean flipper length of the clean dataset was found to be `r mean_p_flipper` mm. 
+Missing data in *flipper_length_mm* column were removed first. Then the mean flipper length was found. 
+The mean flipper length is `r mean_flipper` mm. 
 
-```{r plot}
-ggplot(p_clean, aes(x = bill_length_mm, y = flipper_length_mm, color = (species))) + 
+
+
+```{r, plot}
+clean_penguins = drop_na(penguins, flipper_length_mm)
+
+ggplot(clean_penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = (species))) + 
   geom_point()
 
 ggsave("penguin scatterplot.pdf")
 ```
 
-This is a scatterplot of the clean penguins dataset where x = bill_length_mm and y = flipper_length_mm. The different species are noted in different colors. 
+All missing data in penguins data set were removed before plotting. 
+
+This is a scatterplot of the clean penguins data set where x = bill_length_mm and y = flipper_length_mm. The different species are noted in different colors. 
 
 
 ## Problem 2 
@@ -60,29 +67,66 @@ my_df =
     vec_char = c("apple", "banana", "cherry", "date", "eggplant", "fig", "grape", "honey", "iceberg", "jujube"),
     vec_factor = factor(c("A", "B", "C", "A", "B", "C", "A", "B", "C", "A"))
   )
+
+my_df
 ```
 
-I created a data frame comprised of a *random sample* of size 10 from a standard Normal distribution, a *logical vector* indicating indicating whether elements of the sample are greater than 0, a *character vector* of length 10, and a *factor vector* of length 10, with 3 different factor “levels”. 
+I created a data frame comprised of a *random sample* of size 10 from a standard normal distribution, a *logical vector* indicating indicating whether elements of the sample are greater than 0, a *character vector* of length 10, and a *factor vector* of length 10, with 3 different factor “levels”. 
 
 
 ```{r}
-my_df_vec_log = pull(my_df, vec_log)
-my_df_vec_char = pull(my_df, vec_char)
-my_df_vec_factor = pull(my_df, vec_factor)
+norm_samp_mean = 
+  pull(my_df, norm_samp) |>
+  mean()
 
-mean(my_df_vec_log)
-mean(my_df_vec_char)
-mean(my_df_vec_factor)
+vec_log_mean = 
+  pull(my_df, vec_log) |>
+  mean()
+
+vec_char_mean = 
+  pull(my_df, vec_char) |>
+  mean()
+
+vec_factor_mean = 
+  pull(my_df, vec_factor) |>
+  mean()
+
+norm_samp_mean 
+vec_log_mean 
+vec_char_mean
+vec_factor_mean
 ```
 
-Attempt to take the mean of each variable in my data frame was made. For logical vector, mean was calculated because **TRUE** and **FALSE** correspond to **1** and **0**. However, for character vector and factor vector, the mean could not be calculated because they were not *numeric* or *logical*. 
+Attempt to take the mean of each variable in my data frame was made. 
+
+For random sample, the mean was calculated because it is a numeric vector.  
+
+For logical vector, mean was calculated because **TRUE** and **FALSE** each correspond to **1** and **0**. So the mean gives a proportion of TRUE, or 1 in the vector. 
+
+However, for character vector and factor vector, the mean could not be calculated. Mathematical operations can be performed only on *numeric* or *logical* variables. 
 
 ```{r, message = FALSE}
-my_df_vec_log_num = as.numeric(my_df_vec_log)
-my_df_vec_char_num = as.numeric(my_df_vec_char)
-my_df_vec_factor_num = as.numeric(my_df_vec_factor)
+vec_log_num = 
+  pull(my_df, vec_log) |>
+  as.numeric()
 
+vec_char_num = 
+  pull(my_df, vec_char) |>
+  as.numeric()
+  
+vec_factor_num = 
+  pull(my_df, vec_factor) |>
+  as.numeric() 
+  
 ```
 
-Attempt to convert the variables to *numeric* type was made. The logical and factor variables were converted to *numeric* but the character vector could not be converted. ? 
+Attempt to convert the variables to *numeric* type was made. 
 
+The *logical variable* was converted to numeric because **TRUE** and **FALSE** respecitvely correspond to **1** and **0** in R. 
+
+The *character vector* could not be converted to numeric because characters do not have a direct numeric value. Unless representation of each character value is input, R cannot convert text strings to numeric values. 
+
+The *factor vector* was converted to numeric because different levels in the factor vector correspond to numeric values. 
+
+
+This helps explain why the mean could not calculated for some of the vectors. 
